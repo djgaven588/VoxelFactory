@@ -1,8 +1,6 @@
 ﻿using OpenTK.Mathematics;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace VoxelFactoryCore
 {
@@ -13,7 +11,7 @@ namespace VoxelFactoryCore
         public Matrix4 ProjectionMatrix { get { RecreateProjectionMatrix(); return projectionMatrix; } }
         public float FOV = 60f;
         public float NearPlane = 0.01f;
-        public float FarPlane = 1000f;
+        public float FarPlane = 1f;
 
         private Matrix4 projectionMatrix;
 
