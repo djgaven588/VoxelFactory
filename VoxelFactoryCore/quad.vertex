@@ -4,8 +4,15 @@ in vec2 vertex;
 
 out vec2 texcoord;
 
-void main(void) {
-  gl_Position = vec4(vertex, 0.0, 1.0);
+uniform mat4 _ViewMatrix;
+uniform mat4 _ProjMatrix;
+uniform mat4 _TransMatrix;
 
-  texcoord = vertex.xy * 0.5 + vec2(0.5, 0.5);
+void main(void) {
+
+	vec4 worldPosition = _TransMatrix * vec4(vertex, 0, 1.0);
+	gl_Position = _ProjMatrix * _ViewMatrix * worldPosition;
+	//gl_Position = vec4(vertex, 0.0, 1.0);
+
+	texcoord = vertex.xy * 0.5 + vec2(0.5, 0.5);
 }

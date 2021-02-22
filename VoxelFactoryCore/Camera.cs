@@ -11,7 +11,7 @@ namespace VoxelFactoryCore
         public Matrix4 ProjectionMatrix { get { RecreateProjectionMatrix(); return projectionMatrix; } }
         public float FOV = 60f;
         public float NearPlane = 0.01f;
-        public float FarPlane = 1f;
+        public float FarPlane = 10f;
 
         private Matrix4 projectionMatrix;
 
@@ -33,7 +33,7 @@ namespace VoxelFactoryCore
             if (InputManager.IsKeyNowDown(Keys.Escape))
                 InputManager.ToggleMouseState();
 
-            Vector3 movement = new Vector3(InputManager.GetAxis(Keys.D, Keys.A), InputManager.GetAxis(Keys.Space, Keys.LeftShift), InputManager.GetAxis(Keys.W, Keys.S));
+            Vector3 movement = new Vector3(InputManager.GetAxis(Keys.D, Keys.A), InputManager.GetAxis(Keys.Space, Keys.LeftShift), -InputManager.GetAxis(Keys.W, Keys.S));
 
             if (movement.Length > 0)
             {
@@ -41,7 +41,7 @@ namespace VoxelFactoryCore
             }
 
             var ang = InputManager.MouseDelta().Yx * timeDelta * 5;
-            Rotation += new Vector3(ang.X, ang.Y, 0);
+            Rotation -= new Vector3(ang.X, ang.Y, 0);
 
             Rotation.X = Math.Clamp(Rotation.X, -90, 90);
 

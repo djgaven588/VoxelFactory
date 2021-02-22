@@ -8,10 +8,22 @@ namespace VoxelFactoryCore
         public const double PI = 3.1415926535897931;
         public const double E = 2.7182818284590451;
 
+        public static Matrix4 CreateTransformationMatrix(Vector3d translation, Vector3d rotation, Vector3d scale)
+        {
+            Matrix4 matrix = Matrix4.Identity;
+
+            matrix *= Matrix4.CreateTranslation((float)translation.X, (float)translation.Y, (float)translation.Z);
+            matrix *= Matrix4.CreateRotationX((float)ConvertToRadians(rotation.X));
+            matrix *= Matrix4.CreateRotationY((float)ConvertToRadians(rotation.Y));
+            matrix *= Matrix4.CreateRotationZ((float)ConvertToRadians(rotation.Z));
+            matrix *= Matrix4.CreateScale((float)scale.X, (float)scale.Y, (float)scale.Z);
+            return matrix;
+        }
+
         public static Matrix4 CreateViewMatrix(Camera camera)
         {
-            return Matrix4.LookAt((Vector3)camera.Position, (Vector3)camera.Position + Quaternion.FromEulerAngles((Vector3)camera.Rotation * ((float)PI / 180f)) * Vector3.UnitZ, Vector3.UnitY);
-            /*
+            //return Matrix4.LookAt((Vector3)camera.Position, (Vector3)camera.Position + Quaternion.FromEulerAngles((Vector3)camera.Rotation * ((float)PI / 180f)) * Vector3.UnitZ, Vector3.UnitY);
+            
             Matrix4 matrix = Matrix4.Identity;
 
             Vector3 negativeCameraPos = (Vector3)(-camera.Position);
@@ -19,7 +31,7 @@ namespace VoxelFactoryCore
             matrix *= Matrix4.CreateRotationY((float)ConvertToRadians(camera.Rotation.Y));
             matrix *= Matrix4.CreateRotationX((float)ConvertToRadians(camera.Rotation.X));
             matrix *= Matrix4.CreateRotationZ((float)ConvertToRadians(camera.Rotation.Z));
-            return matrix;*/
+            return matrix;
         }
 
         /// <summary>

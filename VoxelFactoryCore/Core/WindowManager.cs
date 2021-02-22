@@ -52,6 +52,11 @@ namespace VoxelFactoryCore
         private int cameraToWorldUniformQuad;
         private int cameraToWorldInverseUniformQuad;
 
+        private int viewMatrixUniformQuad;
+        private int projectionMatrixUniformQuad;
+
+        private int modelMatrixQuad;
+
         private Camera camera;
 
         protected override void OnLoad()
@@ -65,7 +70,7 @@ namespace VoxelFactoryCore
             InitQuadProgram();
 
             camera = new Camera() { FOV = 75 };
-            camera.Position = new Vector3d(0, 2, 0);
+            camera.Position = new Vector3d(0, 0, 0);
 
             camera.RecreateProjectionMatrix();
 
@@ -142,6 +147,9 @@ namespace VoxelFactoryCore
             GL.UseProgram(quadProgram);
             cameraToWorldUniformQuad = GL.GetUniformLocation(quadProgram, "_CameraToWorld");
             cameraToWorldInverseUniformQuad = GL.GetUniformLocation(quadProgram, "_CameraInverseProjection");
+            viewMatrixUniformQuad = GL.GetUniformLocation(quadProgram, "_ViewMatrix");
+            projectionMatrixUniformQuad = GL.GetUniformLocation(quadProgram, "_ProjMatrix");
+            modelMatrixQuad = GL.GetUniformLocation(quadProgram, "_TransMatrix");
             GL.UseProgram(0);
         }
 
@@ -152,11 +160,17 @@ namespace VoxelFactoryCore
             Matrix4 cameraWorldMatrix = viewMatrix * projectionMatrix;
             Matrix4 cameraWorldInverseMatrix = cameraWorldMatrix.Inverted();
 
+            Matrix4 modelMatrix = Mathmatics.CreateTransformationMatrix(new Vector3d(0, 0, -1), Vector3d.Zero, Vector3d.One);
+
             GL.UseProgram(quadProgram);
 
             // Load up the compute shader with data
-            GL.UniformMatrix4(cameraToWorldUniformQuad, true, ref cameraWorldMatrix);
-            GL.UniformMatrix4(cameraToWorldInverseUniformQuad, true, ref cameraWorldInverseMatrix);
+            GL.UniformMatrix4(cameraToWorldUniformQuad, false, ref cameraWorldMatrix);
+            GL.UniformMatrix4(cameraToWorldInverseUniformQuad, false, ref cameraWorldInverseMatrix);
+            GL.UniformMatrix4(modelMatrixQuad, false, ref modelMatrix);
+
+            GL.UniformMatrix4(viewMatrixUniformQuad, false, ref viewMatrix);
+            GL.UniformMatrix4(projectionMatrixUniformQuad, false, ref projectionMatrix);
 
             GL.BindVertexArray(vao);
 
